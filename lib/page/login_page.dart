@@ -93,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
       if (result['code'] == 0) {
         print('登录成功');
         showToast('登录成功');
+        //登录成功，跳转首页
         HiNavigator.getInstance().onJumpTo(RouteStatus.home);
       } else {
         print(result['msg']);

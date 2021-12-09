@@ -38,15 +38,26 @@ class BiliApp extends StatefulWidget {
 class _BiliAppState extends State<BiliApp> {
   BiliRouteDelegate _routeDelegate = BiliRouteDelegate();
 
+  // BiliRouteInformationParser _routeInformationParser = BiliRouteInfomationParser();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<HiCache>(
-      //打开页面之前 预初始化
+      //打开页面之前  使用FutureBuilder进行异步预初始化，读取一些缓存信息，因为页面可能会用到这些缓存来显示一些用户的信息
       future: HiCache.preInit(),
+      //返回的具体的widget
       builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
-        //定义route           加载结束 返回router  否则返回加载中
+        //定义route   加载结束 返回router  否则返回全局的加载中widget
         var widget = snapshot.connectionState == ConnectionState.done
-            ? Router(routerDelegate: _routeDelegate)
+            ? Router(
+                //传入路由代理
+                routerDelegate: _routeDelegate,
+
+                // 下面这两个属性是组合使用的，主要是来开发web应用的，如果开发IOS和Android就不需要设置了
+                // routeInformationParser: _routeInformationParser,
+                // routeInformationProvider:
+                //     PlatformRouteInformationProvider(initialRouteInformation: RouteInformation(location: "/")),
+              )
             : Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
@@ -95,6 +106,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     );
   }
 
+  // 默认设置路由为首页
   RouteStatus _routeStatus = RouteStatus.home;
   List<MaterialPage> pages = [];
 
@@ -113,13 +125,18 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
 
   @override
   Widget build(BuildContext context) {
+    //管理路由堆栈，通过getPageIndex获取当前routeStatus在页面堆栈中的位置。
     var index = getPageIndex(pages, routeStatus);
+
     List<MaterialPage> tempPages = pages;
+
     if (index != -1) {
       // 要打开的页面在栈中已存在，则将该页面和它上面的所有页面进行出栈
       // tips 具体规则可以根据需要进行调整，这里要求栈中只允许有一个同样的页面的实例
       tempPages = tempPages.sublist(0, index);
     }
+
+    //要打开的页面
     var page;
     if (routeStatus == RouteStatus.home) {
       // 跳转首页时将栈中其它页面进行出栈，因为首页不可回退

@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final ValueChanged<int> onJumpTo;
+
   const HomePage({Key key, this.onJumpTo}) : super(key: key);
 
   @override
@@ -28,10 +29,7 @@ class HomePage extends StatefulWidget {
 
 // WidgetsBindingObserver 用来监听生命周期变化
 class _HomePageState extends HiState<HomePage>
-    with
-        AutomaticKeepAliveClientMixin,
-        TickerProviderStateMixin,
-        WidgetsBindingObserver {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin, WidgetsBindingObserver {
   // 路由监听
   var listener;
 
@@ -142,10 +140,7 @@ class _HomePageState extends HiState<HomePage>
       case AppLifecycleState.resumed: //从后台切换前台，界面可见
         // fixBug, 后台切到前台状态栏颜色发生变化问题
         if (!(_currentPage is VideoDetailPage)) {
-          changeStatusBar(
-              context: context,
-              color: Colors.white,
-              statusStyle: StatusStyle.DARK_STYLE);
+          changeStatusBar(context: context, color: Colors.white, statusStyle: StatusStyle.DARK_STYLE);
         }
         break;
       case AppLifecycleState.paused: //界面不可见,后台
@@ -177,8 +172,7 @@ class _HomePageState extends HiState<HomePage>
       print('loadData: $result');
       if (result.categoryList != null) {
         // tab 长度变化后需要重新创建TabController
-        _tabController =
-            TabController(length: result.categoryList.length, vsync: this);
+        _tabController = TabController(length: result.categoryList.length, vsync: this);
       }
       setState(() {
         categoryList = result.categoryList;
@@ -277,20 +271,17 @@ class _HomePageState extends HiState<HomePage>
     runZonedGuarded(() {
       // 异步异常
       Future.delayed(Duration(seconds: 3))
-          .then(
-              (value) => throw StateError('this is future a exception in dart'))
+          .then((value) => throw StateError('this is future a exception in dart'))
           .catchError((e) => print(e));
       // 同步异常
-      throw StateError(
-          'runZonedGuarded:This is second Dart exception in Future.');
+      throw StateError('runZonedGuarded:This is second Dart exception in Future.');
     }, (e, s) => print(e));
   }
 
   void _testCrash2() async {
     try {
       await Future.delayed(Duration(seconds: 1))
-          .then((value) =>
-              throw StateError('This is second Dart exception in Future.'))
+          .then((value) => throw StateError('This is second Dart exception in Future.'))
           .catchError((e) => print(e));
     } catch (e) {
       print(e);

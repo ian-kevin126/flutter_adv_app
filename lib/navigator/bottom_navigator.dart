@@ -21,6 +21,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final PageController _controller = PageController(initialPage: 0);
   List<Widget> _pages;
   bool _hasBuild = false;
+
   @override
   Widget build(BuildContext context) {
     _pages = [
@@ -34,8 +35,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
     if (!_hasBuild) {
       //第一次打开时通知打开的是哪个tab
-      HiNavigator.getInstance()
-          .onBottomTabChange(_initialPage, _pages[_initialPage]);
+      HiNavigator.getInstance().onBottomTabChange(_initialPage, _pages[_initialPage]);
       _hasBuild = true;
     }
     return Scaffold(

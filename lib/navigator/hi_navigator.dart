@@ -30,7 +30,8 @@ int getPageIndex(List<MaterialPage> pages, RouteStatus routeStatus) {
   return -1;
 }
 
-///定义路由封装 ，路由状态
+/// 定义路由封装 ，路由状态
+/// unknown：未知的页面，显示在页面里没有创建的页面
 enum RouteStatus {
   login,
   registration,
@@ -42,13 +43,16 @@ enum RouteStatus {
   favoriteList,
 }
 
-//获取page对应的RouteStates
+//返回路由状态，获取page对应的RouteStates
 RouteStatus getStatus(MaterialPage page) {
   if (page.child is LoginPage) {
+    //如果是登录页，这时候就返回登录状态
     return RouteStatus.login;
   } else if (page.child is RegistrationPage) {
+    //如果是注册页，就返回注册状态
     return RouteStatus.registration;
   } else if (page.child is BottomNavigator) {
+    //如果是首页就返回首页
     return RouteStatus.home;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
@@ -59,15 +63,18 @@ RouteStatus getStatus(MaterialPage page) {
   } else if (page.child is FavoriteListPage) {
     return RouteStatus.favoriteList;
   } else {
+    //默认返回未知页，类似web开发中的404
     return RouteStatus.unknown;
   }
 }
 
 //封装路由信息
 class RouteStatusInfo {
+  //路由状态
   final RouteStatus routeStatus;
   final Widget page;
 
+  //构造方法
   RouteStatusInfo(this.routeStatus, this.page);
 }
 
@@ -84,6 +91,7 @@ class HiNavigator extends _RouteJumpListener {
   RouteJumpListener _routeJump;
 
   RouteStatusInfo _current;
+
   //首页底部tab
   RouteStatusInfo _bottomTab;
 
@@ -126,8 +134,7 @@ class HiNavigator extends _RouteJumpListener {
   /// 通知路由页面变化
   void notify(List<MaterialPage> currentPages, List<MaterialPage> prePages) {
     if (currentPages == prePages) return;
-    var current =
-        RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
+    var current = RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
     _notify(current);
   }
 
