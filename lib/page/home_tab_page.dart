@@ -13,15 +13,14 @@ class HomeTabPage extends StatefulWidget {
   // Category类别名称
   final String categoryName;
   final List<BannerMo> bannerList;
-  const HomeTabPage({Key key, this.categoryName, this.bannerList})
-      : super(key: key);
+
+  const HomeTabPage({Key key, this.categoryName, this.bannerList}) : super(key: key);
 
   @override
   _HomeTabPageState createState() => _HomeTabPageState();
 }
 
-class _HomeTabPageState
-    extends HiBaseTabState<HomeMo, VideoModel, HomeTabPage> {
+class _HomeTabPageState extends HiBaseTabState<HomeMo, VideoModel, HomeTabPage> {
   @override
   void initState() {
     super.initState();
@@ -36,14 +35,14 @@ class _HomeTabPageState
     );*/
 
     // banner之间添加间距
-    return HiBanner(widget.bannerList,
-        padding: EdgeInsets.only(left: 5, right: 5));
+    return HiBanner(widget.bannerList, padding: EdgeInsets.only(left: 5, right: 5));
   }
 
   @override
   // wantKeepAlive
   bool get wantKeepAlive => true;
 
+  // 使用插件flutter_staggered_grid_view实现瀑布流布局
   /*@override
   get contentChild => StaggeredGridView.countBuilder(
       controller: scrollController,
@@ -68,26 +67,21 @@ class _HomeTabPageState
         }
       });*/
 
-  /// HiNestedScrollView优化帧率
+  /// HiNestedScrollView 优化帧率
   @override
   get contentChild => HiNestedScrollView(
       controller: scrollController,
       itemCount: dataList.length,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-      headers: [
-        if (widget.bannerList != null)
-          Padding(padding: EdgeInsets.only(bottom: 8), child: _banner())
-      ],
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 0.95),
+      headers: [if (widget.bannerList != null) Padding(padding: EdgeInsets.only(bottom: 8), child: _banner())],
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.95),
       itemBuilder: (BuildContext context, int index) {
         return VideoCard(videoModel: dataList[index]);
       });
 
   @override
   Future<HomeMo> getData(int pageIndex) async {
-    HomeMo result = await HomeDao.get(widget.categoryName,
-        pageIndex: pageIndex, pageSize: 10);
+    HomeMo result = await HomeDao.get(widget.categoryName, pageIndex: pageIndex, pageSize: 10);
     return result;
   }
 

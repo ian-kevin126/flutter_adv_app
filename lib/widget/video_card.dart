@@ -17,6 +17,7 @@ class VideoCard extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
+        //图片缓存，懒加载，渐变效果
         cachedImage(videoModel.cover, width: size.width / 2 - 10, height: 120),
         Positioned(
           left: 0,

@@ -37,6 +37,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   Widget build(BuildContext context) {
     _pages = [
       HomePage(
+        //顶部头像跳转个人中心
         onJumpTo: (index) => _onJumpTo(index, pageChange: false),
       ),
       RankingPage(),

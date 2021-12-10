@@ -45,7 +45,7 @@ class _HomePageState extends HiState<HomePage>
   // 当前页面
   Widget _currentPage;
 
-  /// 用来设置 当tab页面发生变化时不会创建多次
+  /// 用来设置 当tab页面发生变化时不会创建多次，页面切换出去再切换回来就不会切换多次了
   @override
   bool get wantKeepAlive => true;
 
