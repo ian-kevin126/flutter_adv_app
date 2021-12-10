@@ -14,12 +14,23 @@ class BottomNavigator extends StatefulWidget {
 }
 
 class _BottomNavigatorState extends State<BottomNavigator> {
+  //底部导航icon的默认颜色
   final _defaultColor = Colors.grey;
+
+  //激活状态的颜色
   final _activeColor = primary;
+
+  //当前打开的tab
   int _currentIndex = 0;
+
   static int _initialPage = 0;
+
+  //默认打开首页
   final PageController _controller = PageController(initialPage: 0);
+
+  //底部导航切换时的页面集合
   List<Widget> _pages;
+
   bool _hasBuild = false;
 
   @override
@@ -34,10 +45,11 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     ];
 
     if (!_hasBuild) {
-      //第一次打开时通知打开的是哪个tab
+      //第一次打开时通知打开的是哪个tab，只调用一次
       HiNavigator.getInstance().onBottomTabChange(_initialPage, _pages[_initialPage]);
       _hasBuild = true;
     }
+
     return Scaffold(
       body: PageView(
         controller: _controller,
@@ -73,11 +85,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   /// 页面导航或首页Tab导航
   _onJumpTo(index, {pageChange = false}) {
     if (!pageChange) {
-      //让pageView展示对应的tab
+      //让pageView展示对应的tab，pageView自带的方法
       _controller.jumpToPage(index);
     } else {
       HiNavigator.getInstance().onBottomTabChange(index, _pages[index]);
     }
+
     setState(() {
       //控制选中tab
       _currentIndex = index;

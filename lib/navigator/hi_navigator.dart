@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'bottom_navigator.dart';
 
 /// 监听页面跳转
-/// @param current当前页面， pre上个页面
+/// @param current当前页面， pre上个页面，就可以判断当前页面有没有被压后台，有没有备切换过来
 typedef RouteChangeListener(RouteStatusInfo current, RouteStatusInfo pre);
 
 ///创建页面
@@ -81,8 +81,10 @@ class RouteStatusInfo {
 ///监听路由页面跳转
 ///感知当前页面是否压后台
 class HiNavigator extends _RouteJumpListener {
+  //设计成单例，来管理路由的状态和跳转
   static HiNavigator _instance;
 
+  //创建监听集合
   List<RouteChangeListener> _listeners = [];
 
   // 私有构造方法
@@ -90,11 +92,13 @@ class HiNavigator extends _RouteJumpListener {
 
   RouteJumpListener _routeJump;
 
+  //上一次打开的页面
   RouteStatusInfo _current;
 
   //首页底部tab
   RouteStatusInfo _bottomTab;
 
+  //创建路由实例
   static HiNavigator getInstance() {
     if (_instance == null) {
       _instance = HiNavigator._();
@@ -107,6 +111,7 @@ class HiNavigator extends _RouteJumpListener {
     this._routeJump = routeJumpListener;
   }
 
+  //因为HiNavigator继承了_RouteJumpListener，所以可以实现路由跳转
   @override
   void onJumpTo(RouteStatus routeStatus, {Map args}) {
     print('hi_navigation, routeStatus:$routeStatus, args: $args');
@@ -115,12 +120,13 @@ class HiNavigator extends _RouteJumpListener {
 
   ///监听路由页面跳转
   void addListener(RouteChangeListener listener) {
+    //如果没有添加过listener，才添加
     if (!_listeners.contains(listener)) {
       _listeners.add(listener);
     }
   }
 
-  //移除监听
+  //移除路由监听
   void removeListener(RouteChangeListener listener) {
     _listeners.remove(listener);
   }
@@ -131,10 +137,12 @@ class HiNavigator extends _RouteJumpListener {
     _notify(_bottomTab);
   }
 
-  /// 通知路由页面变化
+  /// 通知路由页面变化，在main.dart里面通知路由的变化
   void notify(List<MaterialPage> currentPages, List<MaterialPage> prePages) {
     if (currentPages == prePages) return;
+    //创建当前打开页面的信息
     var current = RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
+    //通知页面变化
     _notify(current);
   }
 
@@ -143,11 +151,14 @@ class HiNavigator extends _RouteJumpListener {
       //如果打开的是首页，则明确到首页具体的tab
       current = _bottomTab;
     }
+
     print("hi _notify: current：${current.page}");
     print("hi _notify:pre: ${_current?.page}");
     _listeners.forEach((listener) {
+      //current：本次打开的页面，_current：上一次打开的页面
       listener(current, _current);
     });
+
     _current = current;
   }
 
@@ -178,12 +189,13 @@ class HiNavigator extends _RouteJumpListener {
   }
 }
 
-///抽象类提供HiNavigator实现
+///抽象类提供HiNavigator实现，实现路由的跳转
 abstract class _RouteJumpListener {
+  //routeStatus：跳到哪个页面，args：跳转时传递的值
   void onJumpTo(RouteStatus routeStatus, {Map args});
 }
 
-///定义一个类型
+///定义一个路由跳转的类型
 typedef OnJumpTo = void Function(RouteStatus routeStatus, {Map args});
 
 ///定义路由跳转逻辑要实现的功能

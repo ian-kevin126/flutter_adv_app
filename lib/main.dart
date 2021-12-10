@@ -42,6 +42,22 @@ class _BiliAppState extends State<BiliApp> {
 
   @override
   Widget build(BuildContext context) {
+    // FutureBuilder的用法可以看：https://book.flutterchina.club/chapter7/futurebuilder_and_streambuilder.html
+    // 很多时候我们会依赖一些异步数据来动态更新UI，比如在打开一个页面时我们需要先从互联网上获取数据，在获取数据的过程中我们显示一个加载框，
+    // 等获取到数据时我们再渲染页面；又比如我们想展示Stream（比如文件流、互联网数据接收流）的进度。当然，通过 StatefulWidget 我们完全
+    // 可以实现上述这些功能。但由于在实际开发中依赖异步数据更新UI的这种场景非常常见，因此Flutter专门提供了FutureBuilder和StreamBuilder
+    // 两个组件来快速实现这种功能。
+
+    //FutureBuilder({
+    //   this.future, // future：FutureBuilder依赖的Future，通常是一个异步耗时任务。
+    //   this.initialData, // initialData：初始数据，用户设置默认数据。
+    //   required this.builder, // builder：Widget构建器；该构建器会在Future执行的不同阶段被多次调用，构建器签名如下：
+    // })
+
+    // Function (BuildContext context, AsyncSnapshot snapshot),snapshot会包含当前异步任务的状态信息及结果信息 ，比如我们可以通过
+    // snapshot.connectionState获取异步任务的状态信息、通过snapshot.hasError判断异步任务是否有错误等等，完整的定义读者可以查看
+    // AsyncSnapshot类定义。另外，FutureBuilder的builder函数签名和StreamBuilder的builder是相同的。
+
     return FutureBuilder<HiCache>(
       //打开页面之前  使用FutureBuilder进行异步预初始化，读取一些缓存信息，因为页面可能会用到这些缓存来显示一些用户的信息
       future: HiCache.preInit(),
@@ -92,7 +108,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
 
   // 为 Navigator 设置一个 key，必要时可以通过navigatorKey.currentState 来获取到 navigatorState 对象
   BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>() {
-    // 实现路由跳转逻辑
+    // 实现路由跳转逻辑，其他页面跳转的时候都会走这里注册
     HiNavigator.getInstance().registerRouteJump(
       RouteJumpListener(
         onJumpTo: (RouteStatus routeStatus, {Map args}) {
@@ -100,6 +116,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
           if (routeStatus == RouteStatus.detail) {
             this.videoModel = args['videoModel'];
           }
+          //不要忘记监听路有变化，更新页面
           notifyListeners();
         },
       ),
@@ -141,6 +158,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     if (routeStatus == RouteStatus.home) {
       // 跳转首页时将栈中其它页面进行出栈，因为首页不可回退
       pages.clear();
+      //首页整体封装到了bottom_navigator.dart里面
       page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.themeSetting) {
       page = pageWrap(ThemeModeSetting());
@@ -159,8 +177,11 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     tempPages = [...tempPages, page];
     // 通知路由发生变化
     HiNavigator.getInstance().notify(tempPages, pages);
+
     pages = tempPages;
 
+    //当我们调用物理按键或其他方式返回上一页的时候都会触发onWillPop事件。使用WillPopScope是因为Android机
+    // 的物理按键默认是返回首页，所以为了实现各个系统之间的体验一致，需要使用这个组件包裹。
     return WillPopScope(
       // fix Android物理返回键，无法返回上一页问题@https://github.com/flutter/flutter/issues/66349
       onWillPop: () async => !(await navigatorKey.currentState?.maybePop() ?? false),
@@ -169,7 +190,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
         pages: pages,
         onPopPage: (route, result) {
           if (route.settings is MaterialPage) {
-            // 登录页未登录返回拦截
+            // 登录页未登录返回拦截，app不登录是没法使用的
             if ((route.settings as MaterialPage).child is LoginPage) {
               if (!hasLogin) {
                 showWarnToast("请先登录");
@@ -177,14 +198,20 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
               }
             }
           }
+
           // 执行返回操作
           if (!route.didPop(result)) {
             return false;
           }
+
           var tempPages = [...pages];
+
+          // 不要忘记将栈顶的页面出栈
           pages.removeLast();
-          // 通知路由发生变化
+
+          // 还有，通知路由发生变化
           HiNavigator.getInstance().notify(pages, tempPages);
+
           return true;
         },
       ),

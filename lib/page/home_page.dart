@@ -65,6 +65,8 @@ class _HomePageState extends HiState<HomePage>
         // 当前页面被打开
         print('homePage is opened or onResume');
       } else if (widget == pre?.page || pre?.page is HomePage) {
+        //如果当前打开的是上次页面，但是上次打开的是这个页面，这时候就可以认为当前页面被压后台了，模拟安卓的onResume和onPause这两个事件
+        //通过扩展Hi_Navigator来实现flutter原本不能实现的功能。
         print('homePage is back or onPause');
       }
 
