@@ -32,16 +32,7 @@ int getPageIndex(List<MaterialPage> pages, RouteStatus routeStatus) {
 
 /// 定义路由封装 ，路由状态
 /// unknown：未知的页面，显示在页面里没有创建的页面
-enum RouteStatus {
-  login,
-  registration,
-  home,
-  detail,
-  unknown,
-  themeSetting,
-  notice,
-  favoriteList,
-}
+enum RouteStatus { login, registration, home, detail, unknown, themeSetting, notice, favoriteList, darkMode }
 
 //返回路由状态，获取page对应的RouteStates
 RouteStatus getStatus(MaterialPage page) {
