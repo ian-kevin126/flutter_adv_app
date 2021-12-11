@@ -63,8 +63,10 @@ class _VideoViewState extends State<VideoView> {
       aspectRatio: widget.aspectRatio,
       autoPlay: widget.autoPlay,
       looping: widget.looping,
-      allowMuting: false, // 设置是否允许静音
-      allowPlaybackSpeedChanging: false, // 是否可设置播放速度控制
+      allowMuting: false,
+      // 设置是否允许静音
+      allowPlaybackSpeedChanging: false,
+      // 是否可设置播放速度控制
       placeholder: _placeHolder,
 
       customControls: MaterialControls(

@@ -6,16 +6,18 @@ import 'package:flutter_bili_talk/util/view_util.dart';
 
 class ExpandableContent extends StatefulWidget {
   final VideoModel videoModel;
+
   const ExpandableContent({Key key, this.videoModel}) : super(key: key);
 
   @override
   _ExpandableContentState createState() => _ExpandableContentState();
 }
 
-class _ExpandableContentState extends State<ExpandableContent>
-    with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeInTween =
-      CurveTween(curve: Curves.easeIn);
+class _ExpandableContentState extends State<ExpandableContent> with SingleTickerProviderStateMixin {
+  //动画设置
+  static final Animatable<double> _easeInTween = CurveTween(curve: Curves.easeIn);
+
+  //展开状态，默认不展开
   bool _expand = false;
 
   // 用来管理Animation
@@ -27,8 +29,9 @@ class _ExpandableContentState extends State<ExpandableContent>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: Duration(microseconds: 200), vsync: this);
+    //初始化动画，这里由于用到vsync，就需要使用到Mixin——SingleTickerProviderStateMixin
+    _controller = AnimationController(duration: Duration(microseconds: 200), vsync: this);
+    //通过动画生成动画高度
     _heightFactor = _controller.drive(_easeInTween);
     _controller.addListener(() {
       // 监听动画值的变化
@@ -78,9 +81,7 @@ class _ExpandableContentState extends State<ExpandableContent>
             padding: EdgeInsets.only(left: 15),
           ),
           Icon(
-            _expand
-                ? Icons.keyboard_arrow_up_sharp
-                : Icons.keyboard_arrow_down_sharp,
+            _expand ? Icons.keyboard_arrow_up_sharp : Icons.keyboard_arrow_down_sharp,
             color: Colors.grey,
             size: 16,
           ),

@@ -21,8 +21,7 @@ Widget cachedImage(String url, {double width, double height}) {
       placeholder: (BuildContext context, String url) => Container(
             color: Colors.grey[200],
           ),
-      errorWidget: (BuildContext context, String url, dynamic error) =>
-          Icon(Icons.error),
+      errorWidget: (BuildContext context, String url, dynamic error) => Icon(Icons.error),
       imageUrl: url);
 }
 
@@ -42,10 +41,7 @@ blackLineGradient({bool fromTop = false}) {
 }
 
 ///修改状态栏
-void changeStatusBar(
-    {BuildContext context,
-    color: Colors.black,
-    StatusStyle statusStyle: StatusStyle.DARK_STYLE}) {
+void changeStatusBar({BuildContext context, color: Colors.black, StatusStyle statusStyle: StatusStyle.DARK_STYLE}) {
   if (context != null) {
     var themeProvider = context.watch<ThemeProvider>();
     if (themeProvider.isDark()) {
@@ -63,9 +59,8 @@ void changeStatusBar(
   }
   //沉浸式状态栏样式
   FlutterStatusbarManager.setColor(color, animated: false);
-  FlutterStatusbarManager.setStyle(statusStyle == StatusStyle.DARK_STYLE
-      ? StatusBarStyle.DARK_CONTENT
-      : StatusBarStyle.LIGHT_CONTENT);
+  FlutterStatusbarManager.setStyle(
+      statusStyle == StatusStyle.DARK_STYLE ? StatusBarStyle.DARK_CONTENT : StatusBarStyle.LIGHT_CONTENT);
 }
 
 ///带文字的小图标

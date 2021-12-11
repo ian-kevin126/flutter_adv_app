@@ -82,6 +82,7 @@ class _HomePageState extends HiState<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    //因为用了Mixin，就需要使用这个构造函数
     super.build(context);
     return Scaffold(
       body: Container(
@@ -154,6 +155,7 @@ class _HomePageState extends HiState<HomePage>
 
   // 顶部Tab
   _tabBar() {
+    print('__categoryList----$categoryList');
     return HiTab(
       categoryList
           .map<Tab>((tab) => Tab(

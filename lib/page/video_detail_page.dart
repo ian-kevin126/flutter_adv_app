@@ -34,8 +34,7 @@ class VideoDetailPage extends StatefulWidget {
 }
 
 // TabController 需要用 TickerProviderStateMixin
-class _VideoDetailPageState extends State<VideoDetailPage>
-    with TickerProviderStateMixin {
+class _VideoDetailPageState extends State<VideoDetailPage> with TickerProviderStateMixin {
   TabController _tabController;
   List tabs = ['简介', '评论'];
 
@@ -86,8 +85,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                   height: Platform.isAndroid ? 0 : 46,
                 ),
                 _buildVideoView(),
-                _buildTabNavigation(
-                    themeProvider.isDark() ? Colors.black12 : Colors.white),
+                _buildTabNavigation(themeProvider.isDark() ? Colors.black12 : Colors.white),
                 Flexible(
                     child: TabBarView(
                   controller: _tabController,
@@ -201,8 +199,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   /// 点赞
   void _doLike() async {
     try {
-      var result =
-          await LikeDao.like(videoModelNew.vid, !videoDetailModel.isLike);
+      var result = await LikeDao.like(videoModelNew.vid, !videoDetailModel.isLike);
       print('support like request result,: $result');
       // 更新点赞状态
       videoDetailModel.isLike = !videoDetailModel.isLike;
@@ -231,8 +228,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   /// 收藏
   void _doFavorite() async {
     try {
-      var result = await FavoriteDao.favorite(
-          videoModelNew.vid, !videoDetailModel.isFavorite);
+      var result = await FavoriteDao.favorite(videoModelNew.vid, !videoDetailModel.isFavorite);
       print('favorite request result,: $result');
       // 更新收藏状态
       videoDetailModel.isFavorite = !videoDetailModel.isFavorite;
@@ -256,9 +252,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   }
 
   buildVideoList() {
-    return videoList
-        .map((VideoModel vm) => VideoSmallCard(videoModel: vm))
-        .toList();
+    return videoList.map((VideoModel vm) => VideoSmallCard(videoModel: vm)).toList();
   }
 
   /// 详细页右上角TV按钮

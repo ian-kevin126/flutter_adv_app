@@ -54,15 +54,7 @@ class BannerMo {
   String cover;
   String createTime;
 
-  BannerMo(
-      {this.id,
-      this.sticky,
-      this.type,
-      this.title,
-      this.subtitle,
-      this.url,
-      this.cover,
-      this.createTime});
+  BannerMo({this.id, this.sticky, this.type, this.title, this.subtitle, this.url, this.cover, this.createTime});
 
   BannerMo.fromJson(Map<String, dynamic> json) {
     id = json['id'];

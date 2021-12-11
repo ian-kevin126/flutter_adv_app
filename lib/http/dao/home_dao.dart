@@ -6,13 +6,15 @@ class HomeDao {
   static Future<HomeMo> get(String categoryName, {int pageIndex = 1, int pageSize = 10}) async {
     HomeRequest request = HomeRequest();
     //路径参数
-    request.pathParams = categoryName;
+    // request.pathParams = categoryName;
 
     //查询参数
-    request.add('pageIndex', pageIndex).add('pageSize', pageSize);
+    // request.add('pageIndex', pageIndex).add('pageSize', pageSize);
 
     // 发送请求
     var result = await HiNet.getInstance().fire(request);
+
+    print('home_request_res_${HomeMo.fromJson(result['data'])}');
 
     //返回格式化后的data
     return HomeMo.fromJson(result['data']);

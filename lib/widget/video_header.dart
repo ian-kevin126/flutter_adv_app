@@ -7,6 +7,7 @@ import 'package:flutter_bili_talk/util/format_util.dart';
 
 class VideoHeader extends StatelessWidget {
   final Owner owner;
+
   const VideoHeader({Key key, this.owner}) : super(key: key);
 
   @override
@@ -32,10 +33,7 @@ class VideoHeader extends StatelessWidget {
                   children: [
                     Text(
                       owner.name,
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: primary,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, color: primary, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       '${countFormat(owner.fans)}粉丝',

@@ -13,6 +13,6 @@ class HomeRequest extends BaseRequest {
 
   @override
   String path() {
-    return 'uapi/fa/home/';
+    return '/mock/97fc8aa3df28a0e79a47e22cc4231347/api/fa/home';
   }
 }
