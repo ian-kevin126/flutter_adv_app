@@ -5,29 +5,31 @@ import 'package:flutter_bili_talk/util/toast.dart';
 
 /// 通用下拉刷新
 
-//L:列表数据模型不能写死
+//L：列表数据模型不能写死
 //M：数据接口返回的模型
-//T:为具体的widget
+//T：为具体的widget
 //因为是工具类 所以不能有业务代码  设置为了抽象类
-abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HiState<T>
-    with AutomaticKeepAliveClientMixin {
+abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HiState<T> with AutomaticKeepAliveClientMixin {
   List<L> dataList = [];
   int pageIndex = 1;
+
   // 是否正在加载中
   bool loading = false;
+
   //监听列表的滚动 上拉加载更多
   ScrollController scrollController = ScrollController();
 
   //抽象属性，要显示的内容
   get contentChild;
+
   @override
   void initState() {
     super.initState();
     loadData();
 
     scrollController.addListener(() {
-      var dis = scrollController.position.maxScrollExtent -
-          scrollController.position.pixels; //可滚动的最大距离- 当前已滚动距离
+      //可滚动的最大距离- 当前已滚动距离
+      var dis = scrollController.position.maxScrollExtent - scrollController.position.pixels;
 
       print('dis:$dis' +
           "，maxScrollExtent ：" +
@@ -37,9 +39,7 @@ abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HiState<T>
 
       //scrollController.position.maxScrollExtent !=0
       //fix: 当列表高度不满屏幕高度时不执行加载更多
-      if (dis < 300 &&
-          !loading &&
-          scrollController.position.maxScrollExtent != 0) {
+      if (dis < 300 && !loading && scrollController.position.maxScrollExtent != 0) {
         //底部距离不足100时加载更多
         print('_loading:$loading');
         loadData(loadMore: true);
@@ -51,9 +51,7 @@ abstract class HiBaseTabState<M, L, T extends StatefulWidget> extends HiState<T>
   Widget build(BuildContext context) {
     super.build(context);
     return RefreshIndicator(
-        child: MediaQuery.removePadding(
-            context: context, removeTop: true, child: contentChild),
-        onRefresh: loadData);
+        child: MediaQuery.removePadding(context: context, removeTop: true, child: contentChild), onRefresh: loadData);
   }
 
   //获取对应页码的数据
